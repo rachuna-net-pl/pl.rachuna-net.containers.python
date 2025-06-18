@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
         python-is-python3 \
         software-properties-common \
         openssh-client \
+    && pip install --no-cache-dir --break-system-packages yamllint \
     && chmod +x /opt/scripts/*.bash
 
 ENTRYPOINT [ "/opt/scripts/entrypoint.bash" ]
