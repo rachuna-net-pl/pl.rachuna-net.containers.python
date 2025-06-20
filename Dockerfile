@@ -7,8 +7,6 @@ LABEL Application='pl.rachuna-net.containers.semantic-release'
 LABEL Description='semantic-release container image'
 LABEL version="${CONTAINER_VERSION}"
 
-COPY scripts/ /opt/scripts/
-
 # Install packages
 RUN apt-get update && apt-get install -y \
         ca-certificates \
@@ -25,6 +23,3 @@ RUN apt-get update && apt-get install -y \
         software-properties-common \
         openssh-client \
     && pip install --no-cache-dir --break-system-packages yamllint \
-    && chmod +x /opt/scripts/*.bash
-
-ENTRYPOINT [ "/opt/scripts/entrypoint.bash" ]
