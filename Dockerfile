@@ -7,6 +7,10 @@ LABEL Application='pl.rachuna-net.containers.semantic-release'
 LABEL Description='semantic-release container image'
 LABEL version="${CONTAINER_VERSION}"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
+COPY scripts/ /opt/scripts/
+
 # Install packages
 RUN apt-get update && apt-get install -y \
         ca-certificates \
@@ -22,4 +26,20 @@ RUN apt-get update && apt-get install -y \
         python-is-python3 \
         software-properties-common \
         openssh-client \
+    && apt-get upgrade -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir --break-system-packages yamllint \
+
+    # Make scripts executable
+    && chmod +x /opt/scripts/*.bash \
+
+# Create a non-root user and set permissions
+    && useradd -m -s /bin/bash python \
+    && chown -R python:python /opt/scripts
+
+USER python
+
+ENTRYPOINT [ "/opt/scripts/entrypoint.bash" ]
+
+    
