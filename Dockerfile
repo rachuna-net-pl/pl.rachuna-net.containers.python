@@ -34,11 +34,11 @@ RUN apt-get update && apt-get install -y \
     # Make scripts executable
     && chmod +x /opt/scripts/*.bash \
 
-# Create a non-root user and set permissions
-    && useradd -m -s /bin/bash python \
-    && chown -R python:python /opt/scripts
+    # Create a non-root user and set permissions
+    && useradd -m -s /bin/bash nonroot \
+    && chown -R nonroot:nonroot /opt/scripts
 
-USER python
+USER nonroot
 
 ENTRYPOINT [ "/opt/scripts/entrypoint.bash" ]
 
