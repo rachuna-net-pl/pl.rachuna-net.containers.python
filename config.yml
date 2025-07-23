@@ -1,0 +1,51 @@
+---
+base_image: ubuntu:noble
+
+labels:
+  maintainer: "Maciej Rachuna <rachuna.maciej@gmail.com>"
+  description: Kontener z python, wykorzystywany w procesach budowania kontenerów w środowisku GitLab CI.
+  version: "1.0.0"
+  image_source: "https://gitlab.com/pl.rachuna-net/containers/python"
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  TF_IN_AUTOMATION: "true"
+  LANG: C.UTF-8
+
+before_build_commands: []
+
+custom_repos: []
+
+packages:
+  - ca-certificates
+  - curl
+  - git
+  - gnupg2
+  - jq
+  - lsb-release
+  - python3
+  - python3-pip
+  - python3-setuptools
+  - python3-venv
+  - python-is-python3
+  - software-properties-common
+  - openssh-client
+
+extra_commands:
+  - pip install --no-cache-dir --break-system-packages yamllint
+  - chmod 777 /opt/scripts
+  - chmod 777 /opt/scripts/*
+  - yamllint --version
+
+copy:
+  - source: scripts/
+    destination: /opt/scripts/
+
+user:
+  name: nonroot
+  shell: /bin/bash
+  home: /home/nonroot
+  chown: /opt/scripts/
+
+entrypoint: "/opt/scripts/entrypoint.bash"
+cmd: "/bin/bash"
